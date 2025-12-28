@@ -1,0 +1,44 @@
+Produit: Ce que tu vends (riz, lait, pain)
+
+Variante: La version exacte vendue (1kg, 5kg)
+
+Stock location: L’endroit où les produits sont physiquement stockés
+
+Inventory level: Combien de cette variante il y a dans cet endroit
+
+Sales channel: Par quel moyen on vend (app mobile Ramana)
+
+Lien canal ↔ stock: Quel stock est utilisé quand on vend via l’app
+
+1️⃣ Route Produits
+
+👉 Question : “Qu’est-ce que je peux acheter ?”
+
+Cette route : demande à Medusa la liste des produits; reformate la réponse
+
+renvoie juste : nom; prix; stock disponible
+
+2️⃣ Route Panier (Cart)
+
+👉 Question : “Qu’est-ce que j’ai choisi ?”
+
+Cette route : crée un panier; ajoute des articles; modifie des quantités
+
+👉 Le panier réserve le stock, mais ne le sort pas encore.
+
+3️⃣ Route Commande (Order)
+
+👉 Question : “Je confirme mon achat”
+
+Cette route : transforme le panier en commande; déclenche le vrai workflow; le stock est réellement consommé
+
+Une route est une porte simple qui permet à ton app de demander quelque chose au backend, sans connaître comment ça fonctionne à l’intérieur.
+
+Schéma simplifié du flux :
+App mobile
+   ↓
+Routes Ramana (simples)
+   ↓
+Medusa (le moteur)
+   ↓
+Base de données
