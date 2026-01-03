@@ -42,3 +42,346 @@ Routes Ramana (simples)
 Medusa (le moteur)
    ↓
 Base de données
+
+
+----------------------------------------
+
+Contexte général du projet
+
+Le projet Ramana est un backend e-commerce minimal construit sur Medusa v2.
+L’objectif n’est pas de faire un e-commerce “classique” avec paiement en ligne, mais de fournir une API simple et robuste permettant à une application mobile ou web de :
+
+afficher un catalogue de produits
+
+créer des commandes locales
+
+gérer des commandes payées hors ligne (cash aujourd’hui, mobile money plus tard)
+
+stocker les commandes dans une base PostgreSQL
+
+Le projet est pensé pour un contexte local (Afrique de l’Ouest), où le paiement en ligne par carte n’est pas prioritaire.
+
+Le backend doit être suffisamment stable et figé pour permettre le développement de l’interface sans dépendre des mécanismes complexes de checkout Medusa.
+
+Stack technique réellement utilisée
+
+Node.js
+
+Medusa v2 (framework)
+
+PostgreSQL 16
+
+Docker (pour la base de données)
+
+API Store Medusa avec routes custom
+
+Workflows Medusa (pour la logique métier)
+
+Aucun usage du checkout standard Medusa
+
+Aucun TypeORM.
+Medusa v2 utilise MikroORM en interne, mais ici la persistance est gérée via un workflow et une table SQL dédiée.
+
+Objectif fonctionnel actuel (ce qui doit absolument marcher)
+
+Exposer des produits
+
+Créer une commande Ramana
+
+Sauvegarder la commande en base
+
+Retourner un objet commande propre au frontend
+
+Tout ce qui n’est pas nécessaire à ces points est volontairement exclu.
+
+Ce qui a été fait et fonctionne
+
+Catalogue produits
+
+Une route store custom existe :
+
+/store/ramana/products
+
+Elle retourne :
+
+id produit
+
+titre
+
+catégorie
+
+variantes
+
+prix en XOF
+
+quantité disponible
+
+in_stock (booléen)
+
+Cette route fonctionne.
+Elle est déjà utilisée avec succès via curl.
+Le contrat de réponse est stable.
+
+Les produits sont seedés via un script seed.ts.
+Le seed crée :
+
+catégories
+
+produits
+
+variantes
+
+prix
+
+stock initial
+
+Le seed fonctionne correctement et peut être rejoué sans casser l’état.
+
+Création de commande Ramana
+
+Une route store custom existe :
+
+/store/ramana/orders
+
+Cette route permet de créer une commande sans passer par :
+
+panier Medusa
+
+payment collection
+
+payment session
+
+order Medusa natif
+
+Payload accepté (figé) :
+
+status : "pending"
+
+customer : { name, phone, address }
+
+items : { lines: [...] }
+
+payment_method : "cash"
+
+Exemple réel validé :
+
+customer.name = string
+customer.phone = string
+customer.address = string
+
+items.lines = tableau
+chaque ligne contient :
+
+variant_id
+
+quantity
+
+payment_method = "cash" uniquement pour l’instant
+
+La route :
+
+calcule le subtotal
+
+calcule le total
+
+fixe la devise à XOF
+
+génère un id de commande
+
+retourne l’objet commande
+
+La route fonctionne.
+Les appels curl retournent bien une commande.
+
+Persistance en base de données
+
+Une table PostgreSQL existe et fonctionne :
+
+ramana_order
+
+Colonnes :
+
+id (text, primary key)
+
+status (text)
+
+customer (jsonb)
+
+items (jsonb)
+
+payment_method (text)
+
+subtotal (integer)
+
+total (integer)
+
+created_at (timestamptz)
+
+updated_at (timestamptz)
+
+deleted_at (timestamptz)
+
+Les commandes sont bien insérées.
+Vérification directe faite via psql dans Docker.
+Plusieurs lignes réelles existent déjà dans la table.
+
+Cela confirme que :
+
+la route fonctionne
+
+la persistance fonctionne
+
+le schéma est valide
+
+Workflow Ramana
+
+La logique métier principale est implémentée dans un workflow Medusa :
+
+createRamanaOrderWorkflow
+
+Ce workflow :
+
+prend un input de commande
+
+valide les données
+
+calcule les montants
+
+écrit en base
+
+retourne la commande créée
+
+Un script de test existe :
+test-ramana-order-workflow.ts
+
+Ce script est une version figée et fait foi.
+Il représente la source de vérité métier.
+
+Le workflow est fonctionnel.
+Les commandes créées par workflow sont présentes en base.
+
+Ce qui est volontairement exclu du périmètre
+
+Tout ce qui suit n’est PAS requis pour la version actuelle :
+
+panier Medusa standard
+
+checkout Medusa
+
+payment collections
+
+payment sessions
+
+Stripe
+
+providers de paiement
+
+users / customers Medusa
+
+shipping
+
+taxes
+
+promotions
+
+admin dashboard pour Ramana
+
+Toute tentative d’intégrer ces éléments a causé :
+
+des erreurs de configuration
+
+des providers introuvables
+
+des crashes serveur
+
+une perte de temps inutile
+
+La décision a été prise de ne PAS les utiliser.
+
+Ce qui a bloqué / posé problème
+
+Tentatives d’utiliser payment-manual
+Le package n’existe pas ou n’est pas installable.
+Cela a causé des erreurs au démarrage.
+
+Tentatives d’utiliser Stripe sans config complète
+Stripe nécessite des clés réelles, des webhooks, etc.
+Inutile pour le projet actuel.
+
+Tentatives d’accéder à db / manager / EntityManager
+Ces objets ne sont pas exposés comme dans Medusa v1.
+Awilix ne les résout pas.
+Cela provoque des erreurs du type :
+
+Could not resolve 'db'
+
+Could not resolve 'manager'
+
+Tentatives de créer un module Medusa “propre”
+defineModule, MedusaService, etc. ont causé :
+
+erreurs de boot
+
+modules non reconnus
+
+“No service found in module”
+
+Ces pistes ont été abandonnées.
+
+Décision finale (contrat figé)
+
+Le projet est désormais figé comme suit :
+
+API store custom uniquement
+
+workflow comme source de vérité
+
+table SQL dédiée ramana_order
+
+aucune dépendance au checkout Medusa
+
+aucune dépendance aux providers de paiement
+
+Cette architecture fonctionne.
+Elle est testée.
+Elle est comprise.
+
+Ce qui est prêt pour le frontend
+
+Le frontend peut maintenant être développé en toute sécurité avec :
+
+GET /store/ramana/products
+
+POST /store/ramana/orders
+
+Le frontend n’a PAS à :
+
+gérer un panier Medusa
+
+gérer un paiement
+
+gérer des tokens complexes
+
+Il envoie une commande simple.
+Il reçoit une commande simple.
+
+Ce qui pourra venir plus tard (mais pas maintenant)
+
+décrément du stock
+
+statuts supplémentaires
+
+mobile money
+
+dashboard admin Ramana
+
+historisation avancée
+
+Rien de cela ne bloque le frontend aujourd’hui.
+
+Conclusion
+
+Le backend Ramana est fonctionnel.
+Le contrat API est stable.
+La base est valide.
+Les workflows marchent.

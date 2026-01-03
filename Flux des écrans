@@ -1,0 +1,286 @@
+🧑‍🦱 PARTIE CLIENT — FLUX PRINCIPAL
+🎬 Entrée dans l’application
+
+Point d’entrée unique
+
+L’utilisateur ouvre l’application
+
+Aucune authentification
+
+Aucune configuration préalable
+
+➡️ Écran 1 : Accueil / Catalogue
+
+🟢 ÉCRAN 1 — Catalogue (Accueil)
+
+Ce que l’utilisateur voit
+
+Liste de produits
+
+Pour chaque produit :
+
+nom
+
+prix
+
+indication “en stock / rupture”
+
+Actions possibles
+
+Toucher un produit → voir le détail
+
+➡️ Transition vers Écran 2
+
+🟢 ÉCRAN 2 — Détail Produit
+
+Ce que l’utilisateur voit
+
+Nom du produit
+
+Description
+
+Liste des variantes (si existantes)
+
+Sélecteur de quantité
+
+Bouton “Ajouter”
+
+Actions possibles
+
+Choisir variante
+
+Choisir quantité
+
+Ajouter au panier
+
+➡️ Transition vers Écran 3 (Panier)
+(ou rester sur le produit et continuer)
+
+🟢 ÉCRAN 3 — Panier
+
+Ce que l’utilisateur voit
+
+Liste des produits sélectionnés
+
+Quantité par produit
+
+Prix par ligne
+
+Total provisoire
+
+Actions possibles
+
+Modifier quantité
+
+Supprimer un produit
+
+Continuer la commande
+
+➡️ Bouton “Commander” → Écran 4
+
+🟢 ÉCRAN 4 — Informations Client
+
+Ce que l’utilisateur saisit
+
+Nom
+
+Téléphone
+
+Adresse
+
+Contraintes
+
+Tous les champs obligatoires
+
+Validation simple (vide / non vide)
+
+➡️ Bouton “Continuer” → Écran 5
+
+🟢 ÉCRAN 5 — Paiement (simplifié)
+
+Ce que l’utilisateur choisit
+
+Mode de paiement :
+
+Cash
+
+Mobile Money (plus tard)
+
+⚠️ Pas de paiement en ligne
+
+➡️ Bouton “Valider” → Écran 6
+
+🟢 ÉCRAN 6 — Récapitulatif
+
+Ce que l’utilisateur voit
+
+Produits
+
+Quantités
+
+Total
+
+Infos client
+
+Mode de paiement
+
+Action critique
+
+Bouton “Confirmer la commande”
+
+➡️ Création de la commande → Écran 7
+
+🟢 ÉCRAN 7 — Confirmation
+
+Ce que l’utilisateur voit
+
+Message de confirmation
+
+Numéro de commande
+
+Message rassurant :
+
+“Votre commande a été reçue. Nous vous contacterons.”
+
+Actions possibles
+
+Retour à l’accueil
+
+➡️ Fin du flux client principal
+
+🟢 ÉCRAN 8 — Détail de la dernière commande (optionnel MVP)
+
+Accès
+
+Depuis la confirmation
+
+Ou bouton “Voir ma commande”
+
+Ce que l’utilisateur voit
+
+Détails
+
+Statut (pending / confirmé / livré)
+
+🧑‍💼 PARTIE ADMIN — FLUX OPÉRATIONNEL
+🔐 ÉCRAN A1 — Login Admin
+
+Objectif
+
+Empêcher l’accès public
+
+MVP
+
+Identifiant + mot de passe simple
+
+Pas de rôles
+
+➡️ Connexion → Dashboard
+
+🟠 ÉCRAN A2 — Dashboard Admin
+
+Ce que l’admin voit
+
+Nombre de commandes en attente
+
+Bouton :
+
+Commandes
+
+Produits
+
+➡️ Navigation principale
+
+🟠 ÉCRAN A3 — Liste des commandes
+
+Ce que l’admin voit
+
+Liste des commandes
+
+Infos clés :
+
+date
+
+client
+
+total
+
+statut
+
+Actions
+
+Cliquer sur une commande
+
+➡️ Écran A4
+
+🟠 ÉCRAN A4 — Détail commande
+
+Ce que l’admin voit
+
+Infos client
+
+Adresse
+
+Produits commandés
+
+Quantités
+
+Mode de paiement
+
+Actions
+
+Changer le statut :
+
+pending → confirmé
+
+confirmé → livré
+
+annulé
+
+➡️ Retour liste
+
+🟠 ÉCRAN A5 — Liste des produits
+
+Ce que l’admin voit
+
+Tous les produits
+
+Stock
+
+Statut (actif / désactivé)
+
+Actions
+
+Ajouter produit
+
+Modifier produit
+
+Désactiver produit
+
+➡️ Écran A6
+
+🟠 ÉCRAN A6 — Création / Édition Produit
+
+Ce que l’admin peut faire
+
+Nom
+
+Description
+
+Prix
+
+Variantes
+
+Stock
+
+Activer / désactiver
+
+➡️ Sauvegarde → retour liste
+
+🟠 ÉCRAN A7 — Stock (peut être fusionné MVP)
+
+Option MVP
+
+Stock affiché directement dans la liste produits
+
+Pas d’écran séparé obligatoire

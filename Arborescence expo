@@ -1,0 +1,30 @@
+ramana-mobile/
+├── app/
+│   ├── _layout.tsx
+│   ├── index.tsx                # Catalogue
+│   ├── product/
+│   │   └── [id].tsx              # Détail produit
+│   ├── cart.tsx                  # Panier
+│   ├── customer.tsx              # Infos client
+│   ├── payment.tsx               # Paiement
+│   ├── summary.tsx               # Récapitulatif
+│   └── confirmation.tsx          # Confirmation
+│
+├── components/
+│   ├── ProductCard.tsx
+│   ├── VariantSelector.tsx
+│   ├── QuantitySelector.tsx
+│   └── Button.tsx
+│
+├── context/
+│   └── CartContext.tsx
+│
+├── services/
+│   └── api.ts                    # appels backend
+│
+├── types/
+│   ├── product.ts
+│   └── order.ts
+│
+└── constants/
+    └── config.ts                 # API_URL, etc.

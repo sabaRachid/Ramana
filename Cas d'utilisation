@@ -1,0 +1,455 @@
+Client:
+
+1️⃣ Consulter les produits
+UC-01 — Voir la liste des produits
+
+Acteur : Client
+But : Découvrir les produits disponibles
+
+Déclencheur : Ouverture de l’application
+
+Scénario nominal
+
+Le client ouvre l’app
+
+Le système affiche la liste des produits disponibles
+
+Chaque produit affiche :
+
+nom
+
+prix
+
+disponibilité (en stock / rupture)
+
+variantes si existantes
+
+Résultat
+
+Le client peut parcourir les produits
+
+Écran requis
+➡️ Écran Catalogue / Accueil
+
+UC-02 — Voir le détail d’un produit
+
+Acteur : Client
+But : Comprendre un produit avant de le choisir
+
+Scénario
+
+Le client sélectionne un produit
+
+Le système affiche :
+
+description
+
+variantes disponibles
+
+prix par variante
+
+stock
+
+Résultat
+
+Le client décide d’ajouter ou non
+
+Écran requis
+➡️ Écran Détail Produit
+
+2️⃣ Sélectionner des produits
+UC-03 — Choisir une variante et une quantité
+
+Acteur : Client
+But : Préparer sa commande
+
+Scénario
+
+Le client choisit une variante
+
+Il sélectionne une quantité
+
+Le système vérifie la disponibilité
+
+Le système met à jour le total provisoire
+
+Résultat
+
+Le produit est prêt à être commandé
+
+Écran requis
+➡️ Écran Détail Produit (avec sélection)
+ou
+➡️ Écran Panier simplifié
+
+UC-04 — Modifier la sélection avant validation
+
+Acteur : Client
+But : Ajuster sa commande
+
+Scénario
+
+Le client modifie une quantité
+
+Le système recalcule le total
+
+Le client peut supprimer un produit
+
+Résultat
+
+Commande ajustée
+
+Écran requis
+➡️ Écran Panier
+
+3️⃣ Passer une commande
+UC-05 — Saisir les informations client
+
+Acteur : Client
+But : Permettre la livraison ou le contact
+
+Scénario
+
+Le client saisit :
+
+nom
+
+téléphone
+
+adresse
+
+Le système valide les champs obligatoires
+
+Résultat
+
+Informations prêtes pour la commande
+
+Écran requis
+➡️ Écran Informations Client
+
+UC-06 — Choisir le mode de paiement
+
+Acteur : Client
+But : Indiquer comment il paiera
+
+Scénario
+
+Le client choisit :
+
+cash
+
+mobile money
+
+Le système enregistre le choix
+
+Résultat
+
+Paiement marqué comme hors application
+
+Écran requis
+➡️ Écran Paiement (simplifié)
+
+UC-07 — Valider la commande
+
+Acteur : Client
+But : Créer la commande
+
+Scénario
+
+Le client valide la commande
+
+Le système :
+
+vérifie le stock
+
+calcule le total
+
+crée la commande
+
+sauvegarde en base
+
+Résultat
+
+Commande créée (status: pending)
+
+Écran requis
+➡️ Écran Récapitulatif / Validation
+
+4️⃣ Confirmation de commande
+UC-08 — Voir la confirmation
+
+Acteur : Client
+But : Être rassuré
+
+Scénario
+
+Le système affiche :
+
+numéro de commande
+
+résumé
+
+montant
+
+mode de paiement
+
+message “on vous contactera”
+
+Résultat
+
+Le client sait que la commande est passée
+
+Écran requis
+➡️ Écran Confirmation
+
+5️⃣ Suivi minimal post-commande
+UC-09 — Revoir la dernière commande
+
+Acteur : Client
+But : Vérifier ce qu’il a commandé
+
+Scénario
+
+Le client accède à la dernière commande
+
+Le système affiche :
+
+détails
+
+statut
+
+Résultat
+
+Consultation simple
+
+Écran requis
+➡️ Écran Commande (lecture seule)
+
+
+Admin:
+
+1️⃣ Gestion des commandes (ADMIN)
+UC-A01 — Voir la liste des commandes
+
+Acteur : Admin
+But : Savoir quelles commandes sont à traiter
+
+Scénario
+
+L’admin ouvre l’interface admin
+
+Le système affiche les commandes :
+
+les plus récentes en premier
+
+Pour chaque commande :
+
+numéro
+
+date
+
+client (nom + téléphone)
+
+montant
+
+statut (pending, confirmé, livré, annulé)
+
+Résultat
+
+Vue globale de l’activité
+
+Écran requis
+➡️ Admin — Liste des commandes
+
+UC-A02 — Voir le détail d’une commande
+
+Acteur : Admin
+But : Préparer / traiter la commande
+
+Scénario
+
+L’admin sélectionne une commande
+
+Le système affiche :
+
+informations client
+
+adresse
+
+produits commandés
+
+quantités
+
+total
+
+mode de paiement
+
+Résultat
+
+L’admin sait quoi préparer et livrer
+
+Écran requis
+➡️ Admin — Détail commande
+
+UC-A03 — Changer le statut d’une commande
+
+Acteur : Admin
+But : Suivre l’avancement
+
+Scénario
+
+L’admin change le statut :
+
+pending → confirmé
+
+confirmé → livré
+
+annulé si besoin
+
+Le système sauvegarde le statut
+
+Résultat
+
+Commande à jour
+
+Écran requis
+➡️ Admin — Détail commande (actions)
+
+2️⃣ Gestion des produits (CRUD)
+UC-A04 — Voir la liste des produits
+
+Acteur : Admin
+But : Gérer le catalogue
+
+Scénario
+
+L’admin ouvre la section Produits
+
+Le système affiche :
+
+nom
+
+catégorie
+
+prix
+
+stock
+
+statut (actif / désactivé)
+
+Écran requis
+➡️ Admin — Liste des produits
+
+UC-A05 — Créer un produit
+
+Acteur : Admin
+But : Ajouter un article à vendre
+
+Scénario
+
+L’admin clique “Ajouter produit”
+
+Il saisit :
+
+nom
+
+description
+
+catégorie
+
+variantes (optionnel)
+
+prix
+
+stock initial
+
+Le système valide et enregistre
+
+Résultat
+
+Produit disponible côté client
+
+Écran requis
+➡️ Admin — Création produit
+
+UC-A06 — Modifier un produit
+
+Acteur : Admin
+But : Ajuster un article existant
+
+Scénario
+
+L’admin modifie :
+
+prix
+
+description
+
+stock
+
+statut (désactiver temporairement)
+
+Le système met à jour
+
+Écran requis
+➡️ Admin — Édition produit
+
+UC-A07 — Supprimer / désactiver un produit
+
+Acteur : Admin
+But : Retirer un produit de la vente
+
+Scénario
+
+L’admin supprime ou désactive le produit
+
+Le produit n’apparaît plus côté client
+
+Remarque
+➡️ Soft delete recommandé (désactivation)
+
+3️⃣ Gestion du stock
+UC-A08 — Voir le stock
+
+Acteur : Admin
+But : Anticiper les ruptures
+
+Scénario
+
+L’admin consulte les stocks
+
+Le système affiche :
+
+stock disponible
+
+seuil critique (optionnel)
+
+Écran requis
+➡️ Admin — Stock
+
+UC-A09 — Ajuster le stock
+
+Acteur : Admin
+But : Corriger ou réapprovisionner
+
+Scénario
+
+L’admin augmente ou diminue le stock
+
+Le système met à jour l’inventaire
+
+4️⃣ Sécurité et accès (MVP simple)
+UC-A10 — Accès admin sécurisé
+
+Acteur : Admin
+But : Empêcher l’accès public
+
+Scénario
+
+Accès protégé par :
+
+mot de passe simple
+
+ou clé secrète
+
+ou interface séparée
