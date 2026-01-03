@@ -13,18 +13,7 @@ module.exports = defineConfig({
       cookieSecret: process.env.COOKIE_SECRET || "supersecret",
     }
   },
-  modules: {
-    payment: {
-      resolve: "@medusajs/payment",
-      options: {
-        provider: {
-          stripe: {
-            resolve: "@medusajs/payment-stripe",
-            id: "stripe",
-            options: { api_key: "sk_test_dummy",},
-          },
-        },
-      },
-    },
-  },
+  modules: [
+    { resolve: "./src/modules/ramana-orders" }
+  ],
 })
