@@ -16,9 +16,10 @@ export const POST = async (
       order: result.result,
     })
   } catch (error: any) {
-    // 🔒 Erreurs métier propres
+    //  Erreurs métier
     return res.status(400).json({
       message: error?.message ?? "Erreur lors de la création de la commande",
     })
   }
 }
+
