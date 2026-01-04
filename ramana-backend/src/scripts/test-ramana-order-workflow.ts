@@ -14,12 +14,12 @@ export default async function ({ container }: { container: MedusaContainer }) {
       },
       items: {
         lines: [
-          { variant_id: "variant_01KDGKG1NPK368KG6FETYT17Y5", quantity: 1, unit_price: 500 },
+          { variant_id: "variant_01KDGKG1NPK368KG6FETYT17Y5", quantity: 1, unit_price: 1 },
         ],
       },
       payment_method: "cash",
-      subtotal: 500,
-      total: 500,
+      subtotal: 1,
+      total: 1,
     },
   } as any)
 

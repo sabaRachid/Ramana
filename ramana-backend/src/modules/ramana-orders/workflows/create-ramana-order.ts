@@ -1,6 +1,12 @@
-import { createWorkflow, WorkflowResponse, transform } from "@medusajs/framework/workflows-sdk"
+import {
+  createWorkflow,
+  WorkflowResponse,
+  transform,
+} from "@medusajs/framework/workflows-sdk"
 import { useQueryGraphStep } from "@medusajs/medusa/core-flows"
 
+import { validateRamanaOrderStep } from "./steps/validate-ramana-order"
+import { calculateOrderPricesStep } from "./steps/calculate-order-prices"
 import { reserveStockStep } from "./steps/reserve-stock"
 import { adjustRamanaStockStep } from "./steps/adjust-stock"
 import { createRamanaOrderStep } from "./steps/create-ramana-order"
@@ -8,17 +14,37 @@ import { createRamanaOrderStep } from "./steps/create-ramana-order"
 export const createRamanaOrderWorkflow = createWorkflow(
   "create-ramana-order",
   (input) => {
-    /**
-     * 1) Extraire les lignes de commande VIA transform
-     *    (c’est le SEUL accès valide à l’input)
-     */
-    const lines = transform(input, (data: any) => data.items?.lines)
+    const validated = validateRamanaOrderStep(input)
+    const lines = transform(validated, (d: any) => d.items.lines)
 
-    /**
-     * 2) Charger l’inventaire des variants (Query Graph)
-     *    → on utilise lines comme référence
-     */
-    const variants = useQueryGraphStep({
+    // 1️⃣ Pricing query
+    const pricedVariants = useQueryGraphStep({
+      entity: "variant",
+      fields: [
+        "id",
+        "price_set.prices.amount",
+        "price_set.prices.currency_code",
+      ],
+      filters: {
+        id: transform(lines, (ls: any[]) =>
+          ls.map((l) => l.variant_id)
+        ),
+      },
+    }).config({ name: "query-variants-for-pricing" })
+
+    // 2️⃣ Pricing serveur
+    const pricing = calculateOrderPricesStep(
+      transform(
+        { pricedVariants, lines },
+        (d) => ({
+          variants: d.pricedVariants,
+          items: { lines: d.lines },
+        })
+      )
+    )
+
+    // 3️⃣ Stock
+    const stockVariants = useQueryGraphStep({
       entity: "variant",
       fields: [
         "inventory.*",
@@ -28,31 +54,30 @@ export const createRamanaOrderWorkflow = createWorkflow(
       ],
       filters: {
         id: transform(lines, (ls: any[]) =>
-          Array.isArray(ls) ? ls.map((l) => l.variant_id) : []
+          ls.map((l) => l.variant_id)
         ),
       },
-    })
+    }).config({ name: "query-variants-for-stock" })
 
-    /**
-     * 3) Vérifier le stock et préparer les ajustements
-     */
     const stockUpdates = reserveStockStep(
-      transform({ variants, lines }, (d) => ({
-        variants: d.variants,
-        items: { lines: d.lines },
-      }))
+      transform(
+        { stockVariants, lines },
+        (d) => ({
+          variants: d.stockVariants,
+          items: { lines: d.lines },
+        })
+      )
     )
 
-    /**
-     * 4) Appliquer les ajustements de stock
-     */
     adjustRamanaStockStep(stockUpdates)
 
-    /**
-     * 5) Créer la commande (le step reçoit l’input complet)
-     */
+    // 4️⃣ Création commande avec PRIX SERVEUR
     const order = createRamanaOrderStep(
-      transform(input, (data: any) => data)
+      transform({ input, pricing }, (d: any) => ({
+        ...d.input,
+        subtotal: d.pricing.subtotal,
+        total: d.pricing.total,
+      }))
     )
 
     return new WorkflowResponse(order)

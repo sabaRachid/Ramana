@@ -28,3 +28,12 @@ ramana-mobile/
 │
 └── constants/
     └── config.ts                 # API_URL, etc.
+
+
+Catalogue
+  → Produit
+    → Panier
+      → Infos client
+        → Paiement
+          → Récap
+            → Confirmation
