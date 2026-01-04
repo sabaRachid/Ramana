@@ -1,28 +1,24 @@
 import { createRamanaOrderWorkflow } from "../../../../modules/ramana-orders/workflows/create-ramana-order"
-import type { MedusaRequest, MedusaResponse } from "@medusajs/framework/http"
+import { MedusaRequest, MedusaResponse } from "@medusajs/framework/http"
 
-export async function POST(
+export const POST = async (
   req: MedusaRequest,
   res: MedusaResponse
-) {
-  // 1️⃣ Récupération du payload
-  const body = req.body
+) => {
+  try {
+    const workflow = createRamanaOrderWorkflow(req.scope)
 
-  // 2️⃣ Exécution du workflow
-  const workflow = createRamanaOrderWorkflow(req.scope)
-  const result = await workflow.run({
-    input: body,
-  })
+    const result = await workflow.run({
+      input: req.body,
+    })
 
-  // 3️⃣ Gestion des erreurs workflow
-  if (result.errors?.length) {
+    return res.status(201).json({
+      order: result.result,
+    })
+  } catch (error: any) {
+    // 🔒 Erreurs métier propres
     return res.status(400).json({
-      errors: result.errors,
+      message: error?.message ?? "Erreur lors de la création de la commande",
     })
   }
-
-  // 4️⃣ Réponse Store
-  return res.status(200).json({
-    order: result.result,
-  })
 }

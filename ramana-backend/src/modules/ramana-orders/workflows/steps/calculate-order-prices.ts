@@ -29,7 +29,7 @@ export const calculateOrderPricesStep = createStep(
       }
 
       const price = variant.price_set?.prices?.find(
-        (p: any) => p.currency_code === "xof"
+        (p: any) => p.currency_code === "XOF"
       )
 
       if (!price) {

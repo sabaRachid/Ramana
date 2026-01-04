@@ -75,6 +75,7 @@ export const createRamanaOrderWorkflow = createWorkflow(
     const order = createRamanaOrderStep(
       transform({ input, pricing }, (d: any) => ({
         ...d.input,
+        status: 'pending',
         subtotal: d.pricing.subtotal,
         total: d.pricing.total,
       }))
