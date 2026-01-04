@@ -4,7 +4,12 @@ import {
   getVariantAvailability,
 } from "@medusajs/framework/utils"
 
-export async function GET(req: MedusaStoreRequest, res: MedusaResponse) {
+import type { StoreProductDTO } from "../../../../dtos/store"
+
+export async function GET(
+  req: MedusaStoreRequest,
+  res: MedusaResponse
+) {
   const query = req.scope.resolve(ContainerRegistrationKeys.QUERY)
 
   /**
@@ -60,13 +65,11 @@ export async function GET(req: MedusaStoreRequest, res: MedusaResponse) {
   })
 
   /**
-   * 5. Formater la réponse pour l'app Ramana
+   * 5. Formater la réponse pour l'app Ramana (DTO Store)
    */
-  const formatted = products.map((product) => ({
+  const formatted: StoreProductDTO[] = products.map((product) => ({
     id: product.id,
     title: product.title,
-    description: product.description,
-    category: product.categories?.[0]?.name ?? "Produits",
     variants: product.variants.map((variant) => {
       const price = variant.price_set?.prices.find(
         (p) => p?.currency_code === "XOF"
@@ -78,13 +81,15 @@ export async function GET(req: MedusaStoreRequest, res: MedusaResponse) {
       return {
         id: variant.id,
         title: variant.title,
-        price: price?.amount ?? 0,
-        currency: "XOF",
+        price: {
+          amount: price?.amount ?? 0,
+          currency_code: "XOF",
+        },
         available_quantity: availableQty,
         in_stock: availableQty > 0,
       }
     }),
   }))
 
-  res.json({ products: formatted })
+  return res.status(200).json({ products: formatted })
 }
