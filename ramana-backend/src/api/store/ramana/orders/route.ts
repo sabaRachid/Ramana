@@ -23,3 +23,25 @@ export const POST = async (
   }
 }
 
+export const GET = async (req: MedusaRequest, res: MedusaResponse) => {
+  const ramanaOrdersService = req.scope.resolve<any>("ramana_orders")
+
+  const limit = Number(req.query.limit ?? 20)
+  const offset = Number(req.query.offset ?? 0)
+
+  const [orders, count] = await ramanaOrdersService.listAndCountRamanaOrders(
+    {},
+    {
+      skip: offset,
+      take: limit,
+      order: { created_at: "DESC" },
+    }
+  )
+
+  return res.status(200).json({
+    orders,
+    count,
+    limit,
+    offset,
+  })
+}
