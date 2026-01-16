@@ -21,7 +21,7 @@ export default function OrdersScreen() {
   }, [])
 
   return (
-    <View style={{ padding: 16 }}>
+    <View style={{ padding: 16, paddingTop: 24 }}>
       {error ? (
         <Text
           style={{

@@ -1,14 +1,21 @@
 import { useMemo, useState } from "react"
-import { Image, Pressable, StyleSheet, Text, View } from "react-native"
+import {
+  Image,
+  Pressable,
+  StyleSheet,
+  Text,
+  View,
+  type ImageSourcePropType,
+} from "react-native"
 import type { StoreProductDTO } from "../src/dtos/product"
 
 export function ProductCard({
   product,
-  imageUrl,
+  imageSource,
   onPress,
 }: {
   product: StoreProductDTO
-  imageUrl?: string
+  imageSource?: ImageSourcePropType
   onPress?: () => void
 }) {
   const [expanded, setExpanded] = useState(false)
@@ -27,9 +34,9 @@ export function ProductCard({
   return (
     <View style={styles.card}>
       <Pressable onPress={onPress}>
-        {imageUrl ? (
+        {imageSource ? (
           <View style={styles.imageWrap}>
-            <Image source={{ uri: imageUrl }} style={styles.image} />
+            <Image source={imageSource} style={styles.image} />
             <View
               style={[
                 styles.stockPill,

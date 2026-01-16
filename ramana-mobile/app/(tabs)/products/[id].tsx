@@ -44,7 +44,7 @@ export default function ProductDetailScreen() {
 
   if (!product) return null
 
-  const imageUrl = getProductImage(product)
+  const imageSource = getProductImage(product)
 
   const handleAddToCart = () => {
     if (!selectedVariant) return
@@ -57,7 +57,7 @@ export default function ProductDetailScreen() {
       currency_code: selectedVariant.price.currency_code,
       quantity,
     })
-    Alert.alert("Ajoute", "Produit ajoute au panier", [
+    Alert.alert("Ajouté", "Produit ajouté au panier", [
       { text: "Continuer", onPress: () => router.replace("/products") },
       { text: "Panier", onPress: () => router.push("/cart") },
     ])
@@ -65,8 +65,8 @@ export default function ProductDetailScreen() {
 
   return (
     <View style={styles.container}>
-      {imageUrl ? (
-        <Image source={{ uri: imageUrl }} style={styles.image} />
+      {imageSource ? (
+        <Image source={imageSource} style={styles.image} />
       ) : null}
 
       <Text style={styles.title}>{product.title}</Text>
@@ -107,7 +107,7 @@ export default function ProductDetailScreen() {
       </View>
 
       <View style={styles.quantityRow}>
-        <Text style={styles.quantityLabel}>Quantite</Text>
+        <Text style={styles.quantityLabel}>Quantité</Text>
         <View style={styles.quantityControls}>
           <Pressable
             onPress={() => setQuantity((q) => Math.max(1, q - 1))}
@@ -142,6 +142,7 @@ export default function ProductDetailScreen() {
 const styles = StyleSheet.create({
   container: {
     padding: 16,
+    paddingTop: 24,
   },
   image: {
     width: "100%",

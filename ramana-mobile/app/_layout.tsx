@@ -26,12 +26,12 @@ export default function RootLayout() {
       <Stack>
         <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
         <Stack.Screen
-          name="orders/[id]"
-          options={{ title: "Detail commande" }}
+          name="(tabs)/orders/[id]"
+          options={{ title: "Détail commande" }}
         />
         <Stack.Screen
-          name="products/[id]"
-          options={{ title: "DActail produit" }}
+          name="(tabs)/products/[id]"
+          options={{ title: "Détail produit" }}
         />
       </Stack>
     </CartProvider>

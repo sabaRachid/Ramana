@@ -7,6 +7,7 @@ import {
   useState,
 } from "react"
 import { Platform } from "react-native"
+import AsyncStorage from "@react-native-async-storage/async-storage"
 
 export type CartItem = {
   product_id: string
@@ -30,7 +31,7 @@ type CartContextValue = {
 const CartContext = createContext<CartContextValue | null>(null)
 const STORAGE_KEY = "ramana_cart_v1"
 
-function readStorage(): CartItem[] | null {
+function readWebStorage(): CartItem[] | null {
   if (Platform.OS !== "web") return null
   try {
     const raw = globalThis?.localStorage?.getItem(STORAGE_KEY)
@@ -41,7 +42,7 @@ function readStorage(): CartItem[] | null {
   }
 }
 
-function writeStorage(items: CartItem[]) {
+function writeWebStorage(items: CartItem[]) {
   if (Platform.OS !== "web") return
   try {
     globalThis?.localStorage?.setItem(
@@ -55,8 +56,11 @@ function writeStorage(items: CartItem[]) {
 
 export function CartProvider({ children }: { children: React.ReactNode }) {
   const [items, setItems] = useState<CartItem[]>(() => {
-    return readStorage() ?? []
+    return readWebStorage() ?? []
   })
+  const [hydrated, setHydrated] = useState(
+    Platform.OS === "web"
+  )
 
   const addItem = useCallback((item: CartItem) => {
     setItems((prev) => {
@@ -103,6 +107,37 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
     [items]
   )
 
+  useEffect(() => {
+    if (Platform.OS === "web") return
+    let mounted = true
+    AsyncStorage.getItem(STORAGE_KEY)
+      .then((raw) => {
+        if (!mounted) return
+        if (raw) {
+          setItems(JSON.parse(raw) as CartItem[])
+        }
+        setHydrated(true)
+      })
+      .catch(() => setHydrated(true))
+
+    return () => {
+      mounted = false
+    }
+  }, [])
+
+  useEffect(() => {
+    if (Platform.OS === "web") {
+      writeWebStorage(items)
+      return
+    }
+    if (!hydrated) return
+    AsyncStorage.setItem(STORAGE_KEY, JSON.stringify(items)).catch(
+      () => {
+        // ignore storage failures on device
+      }
+    )
+  }, [items, hydrated])
+
   const value = useMemo(
     () => ({
       items,
@@ -129,6 +164,3 @@ export function useCart() {
   }
   return ctx
 }
-  useEffect(() => {
-    writeStorage(items)
-  }, [items])

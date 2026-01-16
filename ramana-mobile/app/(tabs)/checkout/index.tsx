@@ -59,7 +59,7 @@ export default function CheckoutScreen() {
     } catch (error: any) {
       Alert.alert(
         "Erreur",
-        error?.message ?? "Impossible de creer la commande"
+        error?.message ?? "Impossible de créer la commande"
       )
     } finally {
       setLoading(false)
@@ -68,7 +68,7 @@ export default function CheckoutScreen() {
 
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>Validation commande</Text>
+      <Text style={styles.title}>Validation de commande</Text>
       <Text style={styles.subtitle}>Total {total} XOF</Text>
 
       <View style={styles.section}>
@@ -80,7 +80,7 @@ export default function CheckoutScreen() {
           style={styles.input}
         />
 
-        <Text style={styles.label}>Telephone</Text>
+        <Text style={styles.label}>Téléphone</Text>
         <TextInput
           value={phone}
           onChangeText={setPhone}
@@ -126,6 +126,7 @@ export default function CheckoutScreen() {
 const styles = StyleSheet.create({
   container: {
     padding: 16,
+    paddingTop: 24,
     flex: 1,
   },
   title: {

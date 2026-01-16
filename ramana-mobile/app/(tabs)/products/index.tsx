@@ -43,7 +43,7 @@ export default function ProductsScreen() {
   }, [products, query])
 
   return (
-    <View style={{ paddingHorizontal: 12, paddingTop: 12 }}>
+    <View style={{ paddingHorizontal: 12, paddingTop: 24 }}>
       <View style={{ marginBottom: 12 }}>
         <Text
           style={{
@@ -100,7 +100,7 @@ export default function ProductsScreen() {
           <View style={{ flex: 1, marginBottom: 8 }}>
             <ProductCard
               product={item}
-              imageUrl={getProductImage(item)}
+              imageSource={getProductImage(item)}
               onPress={() => router.push(`/products/${item.id}`)}
             />
           </View>
@@ -112,7 +112,7 @@ export default function ProductsScreen() {
             </Text>
           ) : (
             <Text style={{ fontFamily: "SpaceMono" }}>
-              Aucun produit trouve
+              Aucun produit trouvé
             </Text>
           )
         }

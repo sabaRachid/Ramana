@@ -47,7 +47,7 @@ export default function OrderDetailScreen() {
     <View style={styles.container}>
       <View style={styles.header}>
         <View>
-          <Text style={styles.title}>Detail commande</Text>
+          <Text style={styles.title}>Détail commande</Text>
           <Text style={styles.orderRef}>#{order.id.slice(-6)}</Text>
         </View>
         <OrderStatusBadge status={order.status} />
@@ -98,6 +98,7 @@ export default function OrderDetailScreen() {
 const styles = StyleSheet.create({
   container: {
     padding: 16,
+    paddingTop: 24,
   },
   header: {
     flexDirection: "row",

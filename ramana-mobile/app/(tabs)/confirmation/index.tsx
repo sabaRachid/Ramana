@@ -12,9 +12,9 @@ export default function ConfirmationScreen() {
   return (
     <View style={styles.container}>
       <View style={styles.card}>
-        <Text style={styles.title}>Commande confirmee</Text>
+        <Text style={styles.title}>Commande confirmée</Text>
         <Text style={styles.subtitle}>
-          Merci. Nous vous contacterons bientot.
+          Merci. Nous vous contacterons bientôt.
         </Text>
         {orderId ? (
           <Text style={styles.refText}>Ref {ref}</Text>
@@ -45,6 +45,7 @@ export default function ConfirmationScreen() {
 const styles = StyleSheet.create({
   container: {
     padding: 16,
+    paddingTop: 24,
     flex: 1,
     justifyContent: "center",
   },

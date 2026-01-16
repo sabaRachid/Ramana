@@ -3,7 +3,7 @@ import { Ionicons } from "@expo/vector-icons"
 
 export default function TabsLayout() {
   return (
-    <Tabs>
+    <Tabs screenOptions={{ headerShown: false }}>
       <Tabs.Screen
         name="products/index"
         options={{
