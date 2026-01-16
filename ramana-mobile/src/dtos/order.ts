@@ -1,4 +1,28 @@
-export type StoreOrderLineDTO = {
+export type StoreOrderLineInputDTO = {
+  variant_id: string
+  quantity: number
+}
+
+export type StoreOrderItemsDTO = {
+  lines: StoreOrderLineInputDTO[]
+}
+
+export type StoreOrderListDTO = {
+  id: string
+  status: "pending" | "completed" | "cancelled"
+  customer: {
+    name: string
+    phone: string
+    address: string
+  }
+  items: StoreOrderItemsDTO
+  payment_method: string
+  subtotal: number
+  total: number
+  created_at: string
+}
+
+export type StoreOrderDetailsLineDTO = {
   product_title: string
   variant_title?: string
   quantity: number
@@ -6,23 +30,19 @@ export type StoreOrderLineDTO = {
   total: number
 }
 
-export type StoreOrderDTO = {
+export type StoreOrderDetailsDTO = {
   id: string
   status: "pending" | "completed" | "cancelled"
-
+  created_at: string
   customer: {
     name: string
     phone: string
     address: string
   }
-
-  items: StoreOrderLineDTO[]
-
+  items: StoreOrderDetailsLineDTO[]
   payment_method: string
   subtotal: number
   total: number
-  created_at: string
-
   actions?: {
     can_confirm: boolean
     can_cancel: boolean

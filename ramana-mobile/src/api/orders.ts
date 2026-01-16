@@ -1,15 +1,19 @@
 import { apiFetch } from "./client"
-import { StoreOrderDTO } from "../dtos/order"
+import type {
+  StoreOrderDetailsDTO,
+  StoreOrderItemsDTO,
+  StoreOrderListDTO,
+} from "../dtos/order"
 
 export function getOrder(id: string) {
-  return apiFetch<{ order: StoreOrderDTO }>(
+  return apiFetch<{ order: StoreOrderDetailsDTO }>(
     `/store/ramana/orders/${id}`
   )
 }
 
 export function listOrders(limit = 20, offset = 0) {
   return apiFetch<{
-    orders: StoreOrderDTO[]
+    orders: StoreOrderListDTO[]
     count: number
     limit: number
     offset: number
@@ -17,11 +21,11 @@ export function listOrders(limit = 20, offset = 0) {
 }
 
 export function createOrder(payload: {
-  customer: StoreOrderDTO["customer"]
-  items: StoreOrderDTO["items"]
-  payment_method: string
+  customer: StoreOrderListDTO["customer"]
+  items: StoreOrderItemsDTO
+  payment_method: "cash"
 }) {
-  return apiFetch<{ order: StoreOrderDTO }>(
+  return apiFetch<{ order: StoreOrderDetailsDTO }>(
     `/store/ramana/orders`,
     {
       method: "POST",

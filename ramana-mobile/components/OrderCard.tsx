@@ -1,9 +1,9 @@
 import { Pressable, Text, View } from "react-native"
 import { router } from "expo-router"
 import { OrderStatusBadge } from "./OrderStatusBadge"
-import { StoreOrderDTO } from "../src/dtos/order"
+import type { StoreOrderListDTO } from "../src/dtos/order"
 
-export function OrderCard({ order }: { order: StoreOrderDTO }) {
+export function OrderCard({ order }: { order: StoreOrderListDTO }) {
   return (
     <Pressable
       onPress={() => router.push(`/orders/${order.id}`)}

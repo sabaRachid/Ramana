@@ -2,7 +2,7 @@ import { Text, View } from "react-native"
 
 const STATUS_COLORS: Record<string, string> = {
   pending: "#F59E0B",
-  paid: "#10B981",
+  completed: "#10B981",
   cancelled: "#EF4444",
 }
 
